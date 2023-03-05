@@ -1,0 +1,28 @@
+--4- Create triger for delete and insert
+CREATE TRIGGER trg_Customer_Insert_delete --<< Trigger_Name       -- this create only for insert and delete
+   ON  Customer                      --<< Attaching the table with a trigger
+   AFTER INSERT ,DELETE                  --<< With After , either DELETE,UPDATE,Insert will run immediately after event occured
+AS 
+BEGIN
+INSERT INTO Audit_customer
+(Operation,  ID , last_name , first_name , registration_date , DATE_Creation) 
+Select 'I', ID , last_name , first_name , registration_date , Getdate()
+	from inserted
+UNION ALL
+Select 'D', ID , last_name , first_name , registration_date , Getdate()
+	from Deleted
+End
+
+ Create trigger for Update
+
+CREATE TRIGGER trg_Customer_Update --<< Trigger_Name
+   ON  Customer                      --<< Attaching the table with a trigger
+   AFTER  UPDATE                    --<< With After , either DELETE,UPDATE,Insert will run immediately after event occured
+AS 
+BEGIN
+INSERT INTO Audit_customer
+(Operation,  ID , last_name , first_name , registration_date , DATE_Creation  ) 
+
+Select 'U', ID , last_name , first_name , registration_date , GETDATE()
+	from Inserted
+End
